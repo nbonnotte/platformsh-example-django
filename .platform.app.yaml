@@ -1,0 +1,20 @@
+name: app
+type: python:3.5
+
+dependencies:
+    python:
+       uwsgi: "*"
+
+web:
+    commands:
+       start: "uwsgi --ini conf/uwsgi.ini"
+
+
+relationships:
+    database: "mydatabase:postgresql"
+
+disk: 512
+
+hooks:
+  build: |
+    pip install -r requirements.txt

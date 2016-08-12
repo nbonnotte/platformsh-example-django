@@ -81,31 +81,29 @@ db_settings = {
     'ENGINE': 'django.db.backends.postgresql'
 }
 
+# Database
+# https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 relationships = os.getenv('PLATFORM_RELATIONSHIPS')
 if relationships:
-    relationships = json.decode(base64.decodebytes(relationships.encode()))
-    db_settigns = relationships['database']
+    relationships = json.loads(base64.b64decode(relationships).decode('utf-8'))
+    db_settings = relationships['database'][0]
+    DATABASES = {
+        "default": {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': db_settings['path'],
+            'USER': db_settings['username'],
+            'PASSWORD': db_settings['password'],
+            'HOST': db_settings['host'],
+            'PORT': db_settings['port'],
+        }
+    }
 else:
-    db_settings = {
-        'username': '_username_',
-        'password': '_password_',
-        'host': 'localhost',
-        'path': '_db_name_',
-        'port': 5432
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': db_settings['path'],
-        'USER': db_settings['username'],
-        'PASSWORD': db_settings['password'],
-        'HOST': db_settings['host'],
-        'PORT': db_settings['port']
-    }
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators

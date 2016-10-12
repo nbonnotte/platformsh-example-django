@@ -24,9 +24,13 @@ relationships:
 
 # The configuration of app when it is exposed to the web.
 web:
+    # Whether your app should speak to the webserver via TCP or Unix socket
+    # https://docs.platform.sh/configuration/app-containers.html#upstream
+    upstream:
+        socket_family: unix
     # Commands are run once after deployment to start the application process.
     commands:
-       start: "uwsgi --ini conf/uwsgi.ini"
+        start: "uwsgi --ini conf/uwsgi.ini"
 
 # The size of the persistent disk of the application (in MB).
 disk: 512

@@ -13,10 +13,10 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 import json
 import base64
 import os
+from urllib.parse import urlparse
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -28,7 +28,6 @@ SECRET_KEY = 'w__xu0u9++p^@h!v19xse)u@)fy9%c2q_h8jf72el4910o1#+&'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -83,27 +82,12 @@ db_settings = {
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-relationships = os.getenv('PLATFORM_RELATIONSHIPS')
-if relationships:
-    relationships = json.loads(base64.b64decode(relationships).decode('utf-8'))
-    db_settings = relationships['database'][0]
-    DATABASES = {
-        "default": {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': db_settings['path'],
-            'USER': db_settings['username'],
-            'PASSWORD': db_settings['password'],
-            'HOST': db_settings['host'],
-            'PORT': db_settings['port'],
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
-    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
@@ -142,3 +126,36 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Import some Platform.sh settings from the environment.
+branch = os.getenv('PLATFORM_BRANCH')
+if branch == 'master':
+    DEBUG = False
+
+entropy = os.getenv('PLATFORM_PROJECT_ENTROPY')
+if entropy:
+    SECRET_KEY = entropy
+
+routes = os.getenv('PLATFORM_ROUTES')
+if routes:
+    routes = json.loads(base64.b64decode(routes).decode('utf-8'))
+    app_name = os.getenv('PLATFORM_APPLICATION_NAME')
+    for url, route in routes.items():
+        host = urlparse(url).netloc;
+        if host not in ALLOWED_HOSTS and route['type'] == 'upstream' and route['upstream'] == app_name:
+            ALLOWED_HOSTS.append(host)
+
+relationships = os.getenv('PLATFORM_RELATIONSHIPS')
+if relationships:
+    relationships = json.loads(base64.b64decode(relationships).decode('utf-8'))
+    db_settings = relationships['database'][0]
+    DATABASES = {
+        "default": {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': db_settings['path'],
+            'USER': db_settings['username'],
+            'PASSWORD': db_settings['password'],
+            'HOST': db_settings['host'],
+            'PORT': db_settings['port'],
+        }
+    }

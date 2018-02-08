@@ -46,6 +46,7 @@ hooks:
   # The build hook runs before the application is deployed, and is useful for
   # assembling the codebase.
   build: |
+    pip install --upgrade pip
     pip install -r requirements.txt
   deploy: |
     python manage.py migrate

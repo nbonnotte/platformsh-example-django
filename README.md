@@ -1,6 +1,12 @@
-# Django template for Platform.sh
+# Django 1.11 LTS template for Platform.sh
 
 This project provides a starter kit for Django projects hosted on Platform.sh. It is primarily an example, although could be used as the starting point for a real project.
+
+Notice specifically the `settings.py` where we read some of the environment variables and configure Django
+to connect to the correct database, and run in Debug mode when not running the `master` branch.
+
+In this example we are running Django with Gunicorn. You can check-out other examples to see it run with
+other application servers.
 
 ## Starting a new project
 

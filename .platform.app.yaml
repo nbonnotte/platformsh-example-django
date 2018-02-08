@@ -35,10 +35,18 @@ web:
 # The size of the persistent disk of the application (in MB).
 disk: 512
 
+# Set a local R/W mount for logs
+mounts:
+    'logs':
+        source: local
+        source_path: logs
+        
 # The hooks executed at various points in the lifecycle of the application.
 hooks:
   # The build hook runs before the application is deployed, and is useful for
   # assembling the codebase.
   build: |
     pip install -r requirements.txt
+  deploy: |
+    python manage.py migrate
 

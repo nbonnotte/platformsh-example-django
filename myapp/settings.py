@@ -129,9 +129,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # Import some Platform.sh settings from the environment.
-branch = os.getenv('PLATFORM_BRANCH')
-if branch == 'master':
-    DEBUG = False
+#branch = os.getenv('PLATFORM_BRANCH')
+#if branch == 'master':
+#    DEBUG = False
 
 entropy = os.getenv('PLATFORM_PROJECT_ENTROPY')
 if entropy:
@@ -160,3 +160,21 @@ if relationships:
             'PORT': db_settings['port'],
         }
     }
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/debug.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}

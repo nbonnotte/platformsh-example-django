@@ -31,6 +31,12 @@ web:
     # Commands are run once after deployment to start the application process.
     commands:
         start: "gunicorn -w 4 -b unix:$SOCKET myapp.wsgi:application"
+  locations:
+      "/static":
+          root: "static"
+          passthru: true
+          expires: 1h
+          allow: true
 
 # The size of the persistent disk of the application (in MB).
 disk: 512
@@ -50,4 +56,3 @@ hooks:
     pip install -r requirements.txt
   deploy: |
     python manage.py migrate
-

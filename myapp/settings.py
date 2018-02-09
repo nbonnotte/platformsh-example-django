@@ -129,6 +129,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_ROOT = '/static/'
 
+STATIC_ROOT = os.path.join(os.getenv('PLATFORM_APP_DIR'), 'static')
+
 # Import some Platform.sh settings from the environment.
 #branch = os.getenv('PLATFORM_BRANCH')
 #if branch == 'master':

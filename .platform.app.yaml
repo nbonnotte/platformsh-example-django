@@ -13,7 +13,6 @@ type: 'python:3.6'
 dependencies:
     python:
        gunicorn: '*'
-       pipenv: '*'
 
 # The relationships of the application with services or other applications.
 #
@@ -54,8 +53,7 @@ hooks:
   # The build hook runs before the application is deployed, and is useful for
   # assembling the codebase.
   build: |
-    pip install --upgrade pip
-    pipenv install --system --verbose
+    pip install -r requirements.txt
 
     mkdir logs
     python manage.py collectstatic

@@ -54,6 +54,7 @@ hooks:
   # The build hook runs before the application is deployed, and is useful for
   # assembling the codebase.
   build: |
+    pip install --upgrade-pip
     pipenv install --system
 
     mkdir logs

@@ -55,7 +55,7 @@ hooks:
   # assembling the codebase.
   build: |
     pip install --upgrade-pip
-    pipenv install --system
+    pipenv install --system --verbose
 
     mkdir logs
     python manage.py collectstatic
